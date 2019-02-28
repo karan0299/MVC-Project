@@ -13,52 +13,28 @@
 			$this->twig = new \Twig_Environment($loader) ;
 		}
 
-		
+		public function get() {
+			echo $this->twig->render("login.html",array(
+							"title"=>"Login")) ;
+		}
 
 		public function post()
 		{
-			session_start() ;
+			$username=$_POST['username'] ;
+			$password=$_POST['password'] ;
 
-			if(isset($_SESSION['status']) && $_SESSION['status']==1)
+			$result=Login::authenticate($username, $password);
+
+			if($result)
 			{
-				header('Location: /posts') ;
+				echo $this->twig->render("final.html");
 			}
 			else
 			{
-				if(!isset($_POST['username']) || !isset($_POST['password']))
-				{
-					$this->twig->render("login.html", array(
-						"title"=>"Login",
-						"error" => "Please fill up all fields"
-						)) ;
-				}
-				else
-				{
-					$username=$_POST['username'] ;
-					$_SESSION['username']=$username;
-					$password=$_POST['password'] ;
-					$error="" ;
-					$result=Login::authenticate($username,$password) ;
-					if($result==0)
-					{
-						header('Location: /posts') ;
-					}
-					else if($result==1)
-					{
-						$error = "Invalid username.." ;
-					}
-					else if($result==2)
-					{
-						$error = "Incorrect password.." ;
-					}
-					if($error!="")
-					{
-						echo $this->twig->render("login.html" , array(
-							"title"=>"Login",
-							"error"=>$error
-							)) ;
-					}
-				}
+				echo $this->twig->render("login.html" , array(
+					"title"=>"Login",
+					"error"=>"Invalid username or password"
+				));
 			}
 		}
 	}

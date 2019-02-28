@@ -13,45 +13,28 @@
 			$this->twig = new \Twig_Environment($loader) ;
 		}
 
+		public function get() {
+			echo $this->twig->render("signup.html",array(
+							"title"=>"SignUp")) ;
+		}
+
 		public function post()
 		{
-			if($_POST['username']=="" || $_POST['age']==0 || $_POST['password']=="" || $_POST['link']=="")
+			$username = $_POST['username'];
+			$password = $_POST['password'];
+			
+			$result = SignUp::checkAndAddUser($username, $password) ;
+			if($result)
 			{
-				
-				echo $this->twig->render("register.html",array(
-							"title"=>"Register",
-							"error"=>"Please fill in all the details..."
-							)) ;
+				echo $this->twig->render("signup.html",array(
+					"title"=>"SignUp",
+					"error"=>"User already exists"
+				)) ;
 			}
 			else
 			{
-				$username = $_POST['username'] ;
-				$password = $_POST['password'] ;
-				$age = $_POST['age'] ;
-				$link = $_POST['link'] ;
-				
-				
-					$result = SignUp::checkAndAddUser($username, $password, $age, $link) ;
-					if($result == 0)
-					{
-						echo $this->twig->render("register.html",array(
-							"title"=>"Register",
-							"error"=>"Username already exists..."
-							)) ;
-					}
-					else if($result == 2)
-					{
-						echo $this->twig->render("register.html",array(
-							"title"=>"Register",
-							"error"=>"Could not complete signup. Please try again later..."
-							)) ;
-					}
-					else if($result == 1)
-					{
-						header('Location: /posts') ;
-					}
-				
-			}
+				header("Location: /login");
+			}		
 		}
 	}
 ?>

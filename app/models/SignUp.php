@@ -15,43 +15,29 @@
 			return new \PDO("mysql:dbname=".$db_connect['db_name'].";host=".$db_connect['server'] , $db_connect['username'] , $db_connect['password']) ;
 		}
 
-		public static function checkAndAddUser($username , $password , $age , $link)
+		public static function checkAndAddUser($username , $password)
 		{
-			$db = self::getDB() ;
+			$db = self::getDB();
 			
-			$checkUser = $db->prepare("SELECT * FROM link2 WHERE name = :username") ;
+			$checkUser = $db->prepare("SELECT * FROM users WHERE username = :username");
 			$checkUser->execute(array(
 				"username"=>$username
-				)) ;
+			)) ;
 			$row = $checkUser->fetch(\PDO::FETCH_ASSOC);
 			if($row)
 			{
-				return 0 ;
+				return true;
 			}
 			else
 			{
-				$password_hash = sha1($password) ;
-				$addUser = $db->prepare("INSERT INTO link2 (name , age , password , link) VALUES (:username , :age , :password_hash , :link )") ;
+				$password_hash = hash('sha256', $password);
+				$addUser = $db->prepare("INSERT INTO users (username, password) VALUES (:username, :password_hash)") ;
 				$row = $addUser->execute(array(
 					":username"=>$username,
-					":age"=>$age,
-					":password_hash"=>$password_hash,
-					":link"=>$link
-					));
+					":password_hash"=>$password_hash
+				));
 
-				if($row)
-				{
-					session_start() ;
-					$_SESSION['status']=1;
-					$_SESSION['username'] = $username ;
-					$_SESSION['age'] = $age ;
-					$_SESSION['link'] = $link;
-					return 1 ;
-				}
-				else
-				{
-					return 2 ;
-				}
+				return false;
 			}
 		}
 	}

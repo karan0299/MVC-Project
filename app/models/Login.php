@@ -18,32 +18,24 @@
 
 		public static function authenticate($username , $password)
 		{
-			$db = self::getDB() ;
+			$db = self::getDB();
+			$password_hash = hash('sha256', $password);
 
-			$checkUser = $db->prepare("SELECT * FROM link2 WHERE name=:username") ;
+			$checkUser = $db->prepare("SELECT * FROM users WHERE username=:username AND password=:password") ;
+
 			$checkUser->execute(array(
-				"username"=>$username
-				)) ;
+				"username"=>$username,
+				"password"=>$password_hash
+			));
+			
 			$row=$checkUser->fetch(\PDO::FETCH_ASSOC) ;
 			if($row)
 			{
-				$password_hash = sha1($password) ;
-				if($row['password'] == $password_hash)
-				{
-					$_SESSION['status'] = "1";
-					$_SESSION['username'] = $row['name'] ;
-					$_SESSION['age'] = $row['age'] ;
-					$_SESSION['link'] = $row['link'] ;
-					return 0 ;
-				}
-				else
-				{
-					return 2 ;
-				}
+				return true;
 			}
 			else
 			{
-				return 1 ;
+				return false;
 			}
 		}
 	} ;

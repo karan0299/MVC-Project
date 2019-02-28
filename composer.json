@@ -5,9 +5,6 @@
 		"torophp/torophp":	"dev-master",
 		"twig/twig":"2.0"
 	},
-	"require-dev":{
-
-		},
 	"autoload":{
 		"psr-4":{
 			"Controllers\\":"app/controllers",

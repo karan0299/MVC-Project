@@ -15,16 +15,8 @@
 
 		public function get()
 		{
-			session_start() ;
-			if(isset($_SESSION['status']) && $_SESSION['status']==1)
-			{
-				header('Location: /posts') ;
-			}
-			else
-			{
-				echo $this->twig->render("login.html", array(
+				echo $this->twig->render("home.html", array(
 					"title" => "Login")) ;
-			}
 		}
 	}
 ?>
