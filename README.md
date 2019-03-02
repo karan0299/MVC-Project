@@ -1,9 +1,9 @@
 How to run :-
-1. Copy the alpha.mvc.dev.conf file to /etc/httpd/conf/vhosts/ after changing the path in it to the public folder of the
-   application in your system.
-2. Add the following line in /etc/httpd/conf/httpd.conf :- "Include conf/vhosts/alpha.mvc.dev.conf".
-3. Restart apache.
-4. Create a database named link and import link2.sql.
-5. Configure the credentials.php file and fill in the details accordingly.
-6. Go to alpha.mvc.dev in your browser to use it.
-7. Enjoy :)
+1. git clone https://github.com/alphadose/MVC-Project ~/mvc
+2. cd ~/mvc
+3. Change the paths in mvc.sdslabs.local.conf pointing to the public folder of this project
+4. sudo cp ~/mvc/mvc.sdslabs.local.conf /etc/apache2/sites-available/.
+5. Add `mvc.sdslabs.local` entry to your /etc/hosts
+6. sudo a2ensite mvc.sdslabs.local.conf
+7. sudo service apache2 restart
+8. Open http://mvc.sdslabs.local in your browser
